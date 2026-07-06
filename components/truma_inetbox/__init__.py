@@ -5,6 +5,7 @@ import esphome.config_validation as cv
 import esphome.final_validate as fv
 from esphome import pins, automation
 from esphome.components import uart, time
+import esphome.config_validation as cv
 from esphome.const import (
     CONF_ID,
     CONF_NUMBER,
@@ -229,7 +230,7 @@ FINAL_VALIDATE_SCHEMA = cv.All(
 )
 
 async def to_code(config):
-    if CORE.using_esp_idf:
+    if hasattr(CORE, "using_esp_idf") and CORE.using_esp_idf:
         # Run interrupt on core 0. ESP Home runs on core 1.
         cg.add_build_flag("-DARDUINO_SERIAL_EVENT_TASK_RUNNING_CORE=0")
         # Default Stack Size is 2048. Not enough for my operation.
